@@ -1,5 +1,5 @@
 name: nu_activity_transcript
-description: "A new Flutter project."
+description: "NU Activity Transcript แอพเก็บชั่วโมงจิตอาสาของนิสิต มน. (วิชา 273387)"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.13.5
+  sdk: ^3.12.2
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -34,6 +34,18 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
+  provider: ^6.1.5+1
+  sqflite: ^2.4.4+2
+  path: ^1.9.1
+  crypto: ^3.0.7
+  mobile_scanner: ^7.4.2
+  qr_flutter: ^4.1.0
+  geolocator: ^14.1.2
+  excel: ^4.0.6
+  share_plus: ^13.3.1
+  path_provider: ^2.1.6
+  shared_preferences: ^2.5.6
+  google_fonts: ^8.2.1
 
 dev_dependencies:
   flutter_test:
@@ -56,6 +68,10 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
+  assets:
+    - assets/
+    - assets/posters/
 
   # To add assets to your application, add an assets section, like this:
   # assets:
