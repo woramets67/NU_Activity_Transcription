@@ -1,12 +1,102 @@
-// ไฟล์ชั่วคราว สมาชิก4 จะแทนด้วยของจริง
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class HomeScreen extends StatelessWidget {
+import '../../app/routes.dart';
+import '../../app/theme.dart';
+import '../../models/activity.dart';
+import '../../providers/activity_provider.dart';
+import '../../providers/auth_provider.dart';
+import '../../providers/credit_provider.dart';
+import '../../utils/constants.dart';
+import '../../widgets/activity_card.dart';
+
+// หน้าแรก: รายการกิจกรรมที่เปิดรับ กรองตามประเภทได้ (R1)
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(title: const Text('หน้าแรก')),
-        body: const Center(child: Text('กำลังพัฒนา')),
-      );
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // รอให้หน้าจอสร้างเสร็จก่อน แล้วค่อยโหลดกิจกรรม
+    Future.microtask(() => _reload());
+  }
+
+  Future<void> _reload() async {
+    final studentId = context.read<AuthProvider>().student!.studentId;
+    await context.read<ActivityProvider>().loadActivities(studentId);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final activityProvider = context.watch<ActivityProvider>();
+    final creditProvider = context.watch<CreditProvider>();
+    final student = context.watch<AuthProvider>().student!;
+    final list = activityProvider.openActivities;
+
+    return Scaffold(
+      appBar: AppBar(title: Text('สวัสดี ${student.name}')),
+      // ดึงหน้าจอลงเพื่อโหลดใหม่
+      body: RefreshIndicator(
+        onRefresh: _reload,
+        child: ListView.builder(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 120),
+          itemCount: list.length + 1, // +1 สำหรับแถวตัวกรองด้านบน
+          itemBuilder: (context, index) {
+            if (index == 0) {
+              return _filterRow(activityProvider);
+            }
+            final activity = list[index - 1];
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: ActivityCard(
+                activity: activity,
+                statusText: statusText(activityProvider, creditProvider, activity),
+                statusColor: statusColor(activityProvider, creditProvider, activity),
+                onTap: () => Navigator.pushNamed(context, Routes.activityDetail, arguments: activity.id),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _filterRow(ActivityProvider activityProvider) {
+    final filters = ['ทั้งหมด', ...kActivityKinds];
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Wrap(
+        spacing: 8,
+        children: filters.map((f) {
+          return ChoiceChip(
+            label: Text(f),
+            selected: activityProvider.filter == f,
+            onSelected: (value) => activityProvider.setFilter(f),
+          );
+        }).toList(),
+      ),
+    );
+  }
+}
+
+// ข้อความสถานะบนการ์ด ใช้ร่วมกับหน้ากิจกรรมของฉัน
+String statusText(ActivityProvider p, CreditProvider c, Activity a) {
+  if (c.hasCredit(a.id)) return 'ได้รับชั่วโมงแล้ว';
+  if (p.isRegistered(a.id) && a.isOngoing()) return 'กำลังดำเนินอยู่ สแกนรับชั่วโมงได้';
+  if (p.isRegistered(a.id)) return 'ลงทะเบียนแล้ว';
+  if (p.isFull(a)) return 'เต็มแล้ว';
+  return 'เหลือ ${p.seatsLeft(a)} ที่';
+}
+
+Color statusColor(ActivityProvider p, CreditProvider c, Activity a) {
+  if (c.hasCredit(a.id)) return kGreen;
+  if (p.isRegistered(a.id) && a.isOngoing()) return kOrange;
+  if (p.isRegistered(a.id)) return kDark;
+  if (p.isFull(a)) return kRed;
+  return kGrey;
 }
