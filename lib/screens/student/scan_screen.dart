@@ -9,7 +9,7 @@ import '../../providers/credit_provider.dart';
 import '../../providers/notice_provider.dart';
 import '../../services/claim_service.dart';
 
-// หน้าสแกน QR ใช้แพ็กเกจ mobile_scanner เปิดกล้อง
+// หน้าสแกน
 class ScanScreen extends StatefulWidget {
   const ScanScreen({super.key});
 
@@ -19,7 +19,7 @@ class ScanScreen extends StatefulWidget {
 
 class _ScanScreenState extends State<ScanScreen> {
   final MobileScannerController _cameraController = MobileScannerController();
-  bool _isChecking = false; // กันไม่ให้ตรวจซ้ำตอนกล้องเจอ QR หลายรอบ
+  bool _isChecking = false;
 
   @override
   void dispose() {
@@ -27,7 +27,6 @@ class _ScanScreenState extends State<ScanScreen> {
     super.dispose();
   }
 
-  // ถูกเรียกเมื่อกล้องเจอ QR
   Future<void> _onDetect(BarcodeCapture capture) async {
     if (_isChecking) return;
     final qrText = capture.barcodes.first.rawValue;
@@ -44,7 +43,6 @@ class _ScanScreenState extends State<ScanScreen> {
 
     final result = await ClaimService().checkAndSave(qrText, auth.student!);
 
-    // ถ้าได้ชั่วโมง โหลด Transcript กับแจ้งเตือนใหม่
     if (result.success) {
       await creditProvider.loadCredits(auth.student!.studentId);
       await noticeProvider.refresh();
@@ -64,7 +62,6 @@ class _ScanScreenState extends State<ScanScreen> {
       body: Stack(
         children: [
           MobileScanner(controller: _cameraController, onDetect: _onDetect),
-          // กรอบสีส้มตรงกลาง
           Center(
             child: Container(
               width: 260,

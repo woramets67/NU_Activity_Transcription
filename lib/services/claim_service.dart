@@ -8,35 +8,35 @@ import '../utils/thai_date.dart';
 import 'location_service.dart';
 import 'qr_service.dart';
 
-// ตรวจ QR ที่นิสิตสแกน ผ่านครบ 5 ข้อแล้วจึงบันทึกชั่วโมง (R2)
+// ตรวจการสแกน
 class ClaimService {
   final db = DatabaseHelper.instance;
 
   Future<ClaimResult> checkAndSave(String qrText, Student student) async {
-    // ข้อ 1: เป็น QR ของผู้คุมจริง (ลายเซ็นถูก)
+    // 1. ลายเซ็น
     final data = QrService.readQrText(qrText);
     if (data == null) {
       return ClaimResult(success: false, message: 'QR นี้ใช้รับชั่วโมงไม่ได้');
     }
     final String activityId = data['activityId'];
 
-    // ข้อ 2: QR ยังไม่หมดอายุ (ไม่เก่ากว่า 15 วินาที)
+    // 2. อายุ QR
     final age = QrService.qrAgeInSeconds(data['time']);
     if (age > kQrMaxAge) {
       return ClaimResult(success: false, message: 'QR หมดอายุแล้ว ให้สแกนจากจอผู้คุมอีกครั้ง');
     }
 
-    // ข้อ 3: ยังไม่เคยได้ชั่วโมงกิจกรรมนี้ (กันสแกนซ้ำ)
+    // 3. สแกนซ้ำ
     if (await db.hasCredit(activityId, student.studentId)) {
       return ClaimResult(success: false, message: 'คุณได้รับชั่วโมงกิจกรรมนี้ไปแล้ว');
     }
 
-    // ข้อ 4: ลงทะเบียนกิจกรรมนี้ไว้แล้ว
+    // 4. ลงทะเบียน
     if (!await db.isRegistered(activityId, student.studentId)) {
       return ClaimResult(success: false, message: 'คุณยังไม่ได้ลงทะเบียนกิจกรรมนี้ ติดต่อผู้คุมให้เพิ่มชื่อ');
     }
 
-    // ข้อ 5: อยู่ห่างผู้คุมไม่เกิน 200 เมตร
+    // 5. ระยะ
     final position = await LocationService.getCurrentPosition();
     if (position == null) {
       return ClaimResult(success: false, message: 'กรุณาเปิด GPS และอนุญาตตำแหน่งก่อนสแกน');
@@ -54,7 +54,6 @@ class ClaimService {
       );
     }
 
-    // ผ่านครบ บันทึกชั่วโมง
     final activity = await db.getActivity(activityId);
     final credit = Credit(
       activityId: activityId,
@@ -64,12 +63,11 @@ class ClaimService {
       kind: data['kind'],
       method: kByQr,
       distance: distance,
-      ref: data['sign'].toString().substring(0, 8).toUpperCase(), // เลขอ้างอิง 8 ตัวจากลายเซ็น
+      ref: data['sign'].toString().substring(0, 8).toUpperCase(),
       verifiedAt: DateTime.now(),
     );
     await db.insertCredit(credit);
 
-    // แจ้งเตือนว่าได้ชั่วโมง
     await db.insertNotice(AppNotice(
       studentId: student.studentId,
       activityId: activityId,

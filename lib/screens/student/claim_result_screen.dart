@@ -7,7 +7,7 @@ import '../../models/claim_result.dart';
 import '../../providers/auth_provider.dart';
 import '../../utils/thai_date.dart';
 
-// ผลการสแกน: ผ่านแสดงบัตรยืนยัน ไม่ผ่านบอกเหตุผล
+// ผลการสแกน
 class ClaimResultScreen extends StatelessWidget {
   final ClaimResult result;
   const ClaimResultScreen({super.key, required this.result});
@@ -51,7 +51,6 @@ class ClaimResultScreen extends StatelessWidget {
     );
   }
 
-  // บัตรยืนยันแบบตั๋ว ส่วนบนสีส้ม ส่วนล่างเป็นรายละเอียด
   Widget _ticket(BuildContext context) {
     final credit = result.credit!;
     final student = context.read<AuthProvider>().student!;

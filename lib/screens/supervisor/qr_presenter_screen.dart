@@ -10,7 +10,7 @@ import '../../services/qr_service.dart';
 import '../../utils/constants.dart';
 import '../../utils/thai_date.dart';
 
-// จอ QR ของผู้คุม QR เปลี่ยนทุก 10 วินาที ใช้ Timer นับถอยหลัง
+// จอ QR ผู้คุม
 class QrPresenterScreen extends StatefulWidget {
   final Activity activity;
   const QrPresenterScreen({super.key, required this.activity});
@@ -21,7 +21,7 @@ class QrPresenterScreen extends StatefulWidget {
 
 class _QrPresenterScreenState extends State<QrPresenterScreen> {
   Timer? _timer;
-  double? _lat; // ตำแหน่งของผู้คุม
+  double? _lat;
   double? _lng;
   String? _qrText;
   String? _errorText;
@@ -34,9 +34,8 @@ class _QrPresenterScreenState extends State<QrPresenterScreen> {
   }
 
   Future<void> _start() async {
-    // อ่านตำแหน่งผู้คุมก่อน เพราะต้องใส่ลงใน QR
     final position = await LocationService.getCurrentPosition();
-    if (!mounted) return; // ผู้ใช้ออกจากหน้านี้ไปแล้ว
+    if (!mounted) return;
     if (position == null) {
       setState(() => _errorText = 'กรุณาเปิด GPS และอนุญาตตำแหน่งก่อนเปิด QR');
       return;
@@ -45,7 +44,6 @@ class _QrPresenterScreenState extends State<QrPresenterScreen> {
     _lng = position.longitude;
     _makeNewQr();
 
-    // ทุก 1 วินาที ลดตัวเลขลง ครบแล้วสร้าง QR ใหม่
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_secondsLeft <= 1) {
         _makeNewQr();
@@ -64,14 +62,14 @@ class _QrPresenterScreenState extends State<QrPresenterScreen> {
 
   @override
   void dispose() {
-    _timer?.cancel(); // ปิด Timer เมื่อออกจากหน้านี้
+    _timer?.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, // พื้นขาวสแกนง่าย
+      backgroundColor: Colors.white,
       appBar: AppBar(title: const Text('QR รับชั่วโมง'), backgroundColor: Colors.white),
       body: Center(
         child: Padding(
