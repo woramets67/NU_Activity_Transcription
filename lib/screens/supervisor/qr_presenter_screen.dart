@@ -92,8 +92,19 @@ class _QrPresenterScreenState extends State<QrPresenterScreen> {
   }
 
   Widget _qrArea() {
-    if (_errorText != null) {
-      return Text(_errorText!, style: const TextStyle(color: kRed));
+    (_errorText != null) {
+      return Column(
+        children: [
+          Text(_errorText!, style: const TextStyle(color: kRed)),
+          TextButton(
+            onPressed: () {
+              setState(() => _errorText = null);
+              _start();
+            },
+            child: const Text('ลองใหม่'),
+          ),
+        ],
+      );
     }
     if (_qrText == null) {
       return const CircularProgressIndicator();
