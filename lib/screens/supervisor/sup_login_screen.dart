@@ -6,7 +6,7 @@ import '../../app/theme.dart';
 import '../../providers/auth_provider.dart';
 import '../../utils/validators.dart';
 
-// ผู้คุมเข้าระบบด้วยชื่อและรหัสหน่วยงาน (รหัสทดลอง NUVOL26 SCI2569 NUSA69)
+// เข้าโหมดผู้คุม
 class SupLoginScreen extends StatefulWidget {
   const SupLoginScreen({super.key});
 

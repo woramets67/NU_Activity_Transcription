@@ -8,7 +8,7 @@ import '../models/credit.dart';
 import '../models/registration.dart';
 import '../utils/constants.dart';
 
-// 1 แถวในรายชื่อ: คนที่ลงทะเบียน กับชั่วโมงที่ได้ (credit เป็น null = ยังไม่ได้)
+// 1 แถวในรายชื่อ
 class RosterItem {
   final Registration registration;
   final Credit? credit;
@@ -18,15 +18,15 @@ class RosterItem {
   bool get hasCredit => credit != null;
 }
 
-// งานฝั่งผู้คุม: กิจกรรมของหน่วยงาน รายชื่อ ประกาศ (R4 และ R5)
+// ฝั่งผู้คุม
 class SupervisorProvider extends ChangeNotifier {
   final db = DatabaseHelper.instance;
 
-  List<Activity> activities = []; // กิจกรรมของหน่วยงานนี้
+  List<Activity> activities = [];
   Map<String, int> registeredCount = {};
-  List<RosterItem> roster = []; // รายชื่อของกิจกรรมที่เปิดดูอยู่
+  List<RosterItem> roster = [];
   String searchText = '';
-  String rosterFilter = 'ทั้งหมด'; // 'ทั้งหมด' 'ได้ชั่วโมงแล้ว' หรือ 'ยังไม่ได้'
+  String rosterFilter = 'ทั้งหมด';
 
   Future<void> loadActivities(String orgCode) async {
     activities = await db.getActivitiesOfOrg(orgCode);
@@ -53,7 +53,7 @@ class SupervisorProvider extends ChangeNotifier {
     await loadActivities(a.orgCode);
   }
 
-  // ---------- รายชื่อ ----------
+  // รายชื่อ
 
   Future<void> loadRoster(String activityId) async {
     final registrations = await db.getRegistrationsOfActivity(activityId);
@@ -61,7 +61,6 @@ class SupervisorProvider extends ChangeNotifier {
 
     roster = [];
     for (final r in registrations) {
-      // หาว่าคนนี้ได้ชั่วโมงแล้วหรือยัง
       Credit? found;
       for (final c in credits) {
         if (c.studentId == r.studentId) found = c;
@@ -83,7 +82,6 @@ class SupervisorProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // รายชื่อหลังค้นหาและกรองแล้ว
   List<RosterItem> get filteredRoster {
     return roster.where((item) {
       final r = item.registration;
@@ -95,7 +93,6 @@ class SupervisorProvider extends ChangeNotifier {
     }).toList();
   }
 
-  // สร้างชั่วโมงแบบผู้คุมยืนยันให้
   Credit _creditBySupervisor(Activity a, String studentId) {
     return Credit(
       activityId: a.id,
@@ -110,7 +107,7 @@ class SupervisorProvider extends ChangeNotifier {
     );
   }
 
-  // เพิ่มชื่อเองและให้ชั่วโมงเลย เช่น มือถือนิสิตแบตหมด
+  // เพิ่มชื่อเอง เช่น มือถือนิสิตแบตหมด
   Future<void> addStudentManually(Activity a, String studentId, String name, String faculty) async {
     await db.insertRegistration(Registration(
       activityId: a.id,
@@ -141,9 +138,8 @@ class SupervisorProvider extends ChangeNotifier {
     await loadActivities(a.orgCode);
   }
 
-  // ---------- ประกาศ ----------
+  // ประกาศ
 
-  // โพสต์ประกาศ แล้วส่งแจ้งเตือนให้ทุกคนในรายชื่อ คืนจำนวนคนที่ได้แจ้งเตือน
   Future<int> postAnnouncement(Activity a, String text) async {
     await db.insertAnnouncement(Announcement(
       activityId: a.id,

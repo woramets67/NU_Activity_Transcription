@@ -9,8 +9,8 @@ import '../../utils/constants.dart';
 import '../../utils/thai_date.dart';
 import '../../utils/validators.dart';
 
-// ฟอร์มสร้างและแก้ไขกิจกรรม
-// activityId เป็น null = สร้างใหม่, มีค่า = แก้ไขกิจกรรมนั้น
+// ฟอร์มกิจกรรม
+// activityId เป็น null = สร้างใหม่
 class ActivityEditorScreen extends StatefulWidget {
   final String? activityId;
   const ActivityEditorScreen({super.key, this.activityId});
@@ -44,12 +44,11 @@ class _ActivityEditorScreenState extends State<ActivityEditorScreen> {
   TimeOfDay _startTime = const TimeOfDay(hour: 9, minute: 0);
   TimeOfDay _endTime = const TimeOfDay(hour: 12, minute: 0);
 
-  Activity? _oldActivity; // กิจกรรมเดิมตอนแก้ไข
+  Activity? _oldActivity;
 
   @override
   void initState() {
     super.initState();
-    // ถ้าเป็นการแก้ไข เอาข้อมูลเดิมมาใส่ในฟอร์ม
     if (widget.activityId != null) {
       _oldActivity = context.read<SupervisorProvider>().findById(widget.activityId!);
       final a = _oldActivity;
@@ -78,7 +77,6 @@ class _ActivityEditorScreenState extends State<ActivityEditorScreen> {
     super.dispose();
   }
 
-  // รวมวันที่กับเวลาเป็น DateTime
   DateTime _combine(DateTime date, TimeOfDay time) {
     return DateTime(date.year, date.month, date.day, time.hour, time.minute);
   }
@@ -100,7 +98,6 @@ class _ActivityEditorScreenState extends State<ActivityEditorScreen> {
     final navigator = Navigator.of(context);
 
     final activity = Activity(
-      // สร้างใหม่ใช้เวลาปัจจุบันเป็น id, แก้ไขใช้ id เดิม
       id: _oldActivity?.id ?? 'a-${DateTime.now().millisecondsSinceEpoch}',
       title: _titleController.text.trim(),
       kind: _kind,
@@ -155,7 +152,6 @@ class _ActivityEditorScreenState extends State<ActivityEditorScreen> {
           children: [
             const Text('เลือกรูปโปสเตอร์'),
             const SizedBox(height: 8),
-            // แถวรูปเลื่อนแนวนอน
             SizedBox(
               height: 80,
               child: ListView(

@@ -8,14 +8,13 @@ import '../models/activity.dart';
 import '../providers/supervisor_provider.dart';
 import '../utils/thai_date.dart';
 
-// สร้างไฟล์ Excel (.xlsx) ของรายชื่อ แล้วเปิดหน้าแชร์ของมือถือ (R4)
+// Export Excel
 class ExcelExportService {
   static const List<String> headers = [
     'ลำดับ', 'รหัสนิสิต', 'ชื่อ', 'คณะ', 'กิจกรรม', 'ประเภท',
     'วันที่', 'ชั่วโมง', 'สถานะ', 'เวลายืนยัน', 'ยืนยันโดย',
   ];
 
-  // แปลงรายชื่อเป็นแถวของตาราง (แยกออกมาเพื่อให้เขียน test ได้)
   static List<List<String>> makeRows(Activity a, List<RosterItem> roster) {
     final rows = <List<String>>[];
     for (int i = 0; i < roster.length; i++) {
@@ -40,7 +39,7 @@ class ExcelExportService {
   }
 
   static Future<void> exportAndShare(Activity a, List<RosterItem> roster) async {
-    // 1. สร้างไฟล์ Excel ใส่หัวตารางและข้อมูล
+    // 1. สร้างไฟล์
     final excel = Excel.createExcel();
     final sheet = excel[excel.getDefaultSheet()!];
     sheet.appendRow(headers.map((h) => TextCellValue(h)).toList());
@@ -48,12 +47,12 @@ class ExcelExportService {
       sheet.appendRow(row.map((cell) => TextCellValue(cell)).toList());
     }
 
-    // 2. บันทึกไฟล์ลงโฟลเดอร์ชั่วคราวของเครื่อง
+    // 2. บันทึก
     final folder = await getTemporaryDirectory();
     final file = File('${folder.path}/รายชื่อ_${a.id}.xlsx');
     await file.writeAsBytes(excel.encode()!);
 
-    // 3. เปิดหน้าแชร์ ส่งต่อทาง LINE อีเมล หรือบันทึกลงเครื่องได้
+    // 3. แชร์
     await SharePlus.instance.share(ShareParams(files: [XFile(file.path)], text: a.title));
   }
 }

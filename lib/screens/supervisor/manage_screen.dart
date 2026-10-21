@@ -10,7 +10,7 @@ import '../../utils/constants.dart';
 import '../../utils/thai_date.dart';
 import '../../utils/validators.dart';
 
-// จัดการกิจกรรม: เปิด QR, รายชื่อ, ค้นหา, เพิ่มชื่อเอง, ประกาศ, export Excel (R4 และ R5)
+// จัดการกิจกรรม
 class ManageScreen extends StatefulWidget {
   final String activityId;
   const ManageScreen({super.key, required this.activityId});
@@ -63,7 +63,6 @@ class _ManageScreenState extends State<ManageScreen> {
           Text(thaiDateRange(activity.startAt, activity.endAt), style: const TextStyle(color: kGrey)),
           const SizedBox(height: 12),
 
-          // ตัวเลขสรุป
           Row(
             children: [
               _numberCard('ลงทะเบียน', supProvider.roster.length),
@@ -92,7 +91,13 @@ class _ManageScreenState extends State<ManageScreen> {
               const SizedBox(width: 8),
               Expanded(
                 child: OutlinedButton.icon(
-                  onPressed: () => ExcelExportService.exportAndShare(activity, supProvider.roster),
+                  onPressed: () async {
+                    try {
+                      await ExcelExportService.exportAndShare(activity, supProvider.roster);
+                    } catch (e) {
+                      _showMessage('Export ไม่สำเร็จ ลองใหม่อีกครั้ง');
+                    }
+                  },
                   icon: const Icon(Icons.table_view_outlined),
                   label: const Text('Export Excel'),
                 ),
@@ -101,7 +106,6 @@ class _ManageScreenState extends State<ManageScreen> {
           ),
           const SizedBox(height: 24),
 
-          // หัวข้อรายชื่อ และปุ่มเพิ่มนิสิตเอง
           Row(
             children: [
               const Text('รายชื่อ', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
@@ -168,7 +172,6 @@ class _ManageScreenState extends State<ManageScreen> {
     );
   }
 
-  // กดที่ชื่อแล้วขึ้นเมนู ให้ชั่วโมง ยกเลิกชั่วโมง หรือลบออก
   void _showRosterMenu(Activity activity, RosterItem item) {
     final supProvider = context.read<SupervisorProvider>();
 
@@ -205,8 +208,8 @@ class _ManageScreenState extends State<ManageScreen> {
                 leading: const Icon(Icons.person_remove_outlined, color: kRed),
                 title: const Text('ลบออกจากรายชื่อ', style: TextStyle(color: kRed)),
                 onTap: () {
-                  supProvider.removeFromRoster(activity, item);
                   Navigator.pop(sheetContext);
+                  _confirmRemove(activity, item);
                 },
               ),
             ],
@@ -216,7 +219,23 @@ class _ManageScreenState extends State<ManageScreen> {
     );
   }
 
-  // เพิ่มนิสิตเอง เช่น มือถือนิสิตแบตหมด
+  Future<void> _confirmRemove(Activity activity, RosterItem item) async {
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text('ลบ ${item.registration.studentName} ออกจากรายชื่อ?'),
+        content: const Text('ชั่วโมงของกิจกรรมนี้จะถูกลบด้วย'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(dialogContext, false), child: const Text('ยกเลิก')),
+          TextButton(onPressed: () => Navigator.pop(dialogContext, true), child: const Text('ลบ')),
+        ],
+      ),
+    );
+    if (ok == true && mounted) {
+      await context.read<SupervisorProvider>().removeFromRoster(activity, item);
+    }
+  }
+
   void _showAddDialog(Activity activity) {
     final formKey = GlobalKey<FormState>();
     final idController = TextEditingController();
@@ -281,7 +300,6 @@ class _ManageScreenState extends State<ManageScreen> {
     );
   }
 
-  // พิมพ์ประกาศ แล้วแจ้งเตือนทุกคนที่ลงทะเบียน
   void _showAnnounceDialog(Activity activity) {
     final textController = TextEditingController();
 

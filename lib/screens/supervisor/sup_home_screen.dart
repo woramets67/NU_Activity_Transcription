@@ -8,7 +8,7 @@ import '../../providers/auth_provider.dart';
 import '../../providers/supervisor_provider.dart';
 import '../../utils/thai_date.dart';
 
-// หน้าหลักผู้คุม: กิจกรรมของหน่วยงาน แบ่งกำลังดำเนินอยู่ กำลังจะมาถึง และจบแล้ว
+// หน้าหลักผู้คุม
 class SupHomeScreen extends StatefulWidget {
   const SupHomeScreen({super.key});
 
@@ -75,7 +75,6 @@ class _SupHomeScreenState extends State<SupHomeScreen> {
     );
   }
 
-  // หัวข้อ 1 กลุ่ม ตามด้วยการ์ดกิจกรรมในกลุ่มนั้น
   List<Widget> _section(String title, List<Activity> list, SupervisorProvider supProvider) {
     if (list.isEmpty) return [];
     return [
