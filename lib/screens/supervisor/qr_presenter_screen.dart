@@ -92,7 +92,7 @@ class _QrPresenterScreenState extends State<QrPresenterScreen> {
   }
 
   Widget _qrArea() {
-    (_errorText != null) {
+    if (_errorText != null) {
       return Column(
         children: [
           Text(_errorText!, style: const TextStyle(color: kRed)),
