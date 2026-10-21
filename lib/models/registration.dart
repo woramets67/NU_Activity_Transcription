@@ -1,4 +1,3 @@
-// การลงทะเบียนกิจกรรม เก็บชื่อกับคณะไว้ด้วย ผู้คุมจะได้เห็นรายชื่อ
 class Registration {
   final String activityId;
   final String studentId;

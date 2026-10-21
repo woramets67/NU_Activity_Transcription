@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:nu_activity_transcript/helpers/seed_data.dart';
 import 'package:nu_activity_transcript/widgets/activity_card.dart';
 
-// widget test (บทที่ 16)
+// Widget test
 void main() {
   testWidgets('การ์ดกิจกรรมแสดงชื่อ ประเภท และสถานะ แล้วกดได้', (tester) async {
     final activity = seedActivities().first;

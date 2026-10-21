@@ -7,7 +7,7 @@ import '../../providers/auth_provider.dart';
 import '../../utils/constants.dart';
 import '../../utils/validators.dart';
 
-// หน้าสมัครและเข้าสู่ระบบ ใช้ Form กับ TextFormField (บทที่ 8)
+// สมัครและเข้าสู่ระบบ
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
 
@@ -23,7 +23,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   final _pin2Controller = TextEditingController();
 
   String? _faculty;
-  bool _isSignUp = true; // true = สมัครใหม่, false = เข้าสู่ระบบ
+  bool _isSignUp = true;
   String? _errorText;
 
   @override
@@ -50,7 +50,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     } else {
       error = await auth.signIn(_idController.text, _pinController.text);
     }
-    // ถ้าสำเร็จ StartScreen ใน main.dart จะพาไปหน้าหลักเอง
     setState(() {
       _errorText = error;
     });
@@ -62,6 +61,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       body: SafeArea(
         child: Form(
           key: _formKey,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           child: ListView(
             padding: const EdgeInsets.all(24),
             children: [
@@ -74,7 +74,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               const Text('เก็บชั่วโมงจิตอาสาและกิจกรรมคณะของนิสิต มน.', style: TextStyle(color: kGrey)),
               const SizedBox(height: 24),
 
-              // ปุ่มสลับ สมัครใหม่ หรือ เข้าสู่ระบบ
               Row(
                 children: [
                   Expanded(
@@ -104,7 +103,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               ),
               const SizedBox(height: 12),
 
-              // ช่องที่มีเฉพาะตอนสมัคร
               if (_isSignUp) ...[
                 TextFormField(
                   controller: _nameController,

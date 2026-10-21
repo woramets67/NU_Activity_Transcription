@@ -1,7 +1,7 @@
 class Activity {
   final String id;
   final String title;
-  final String kind; // 'จิตอาสา' หรือ 'กิจกรรมคณะ'
+  final String kind;
   final String orgCode;
   final String orgName;
   final DateTime startAt;
@@ -10,7 +10,7 @@ class Activity {
   final double hours;
   final int capacity;
   final String detail;
-  final String poster; // ที่อยู่รูปใน assets
+  final String poster;
 
   Activity({
     required this.id,
@@ -27,13 +27,11 @@ class Activity {
     required this.poster,
   });
 
-  // กำลังจัดอยู่ตอนนี้หรือไม่
   bool isOngoing() {
     final now = DateTime.now();
     return now.isAfter(startAt) && now.isBefore(endAt);
   }
 
-  // จบไปแล้วหรือยัง
   bool isPast() {
     return DateTime.now().isAfter(endAt);
   }

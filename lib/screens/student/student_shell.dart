@@ -11,7 +11,7 @@ import 'inbox_screen.dart';
 import 'mine_screen.dart';
 import 'profile_screen.dart';
 
-// หน้าหลักของนิสิต มีแถบล่าง 4 แท็บ และปุ่มสแกนสีส้ม
+// แถบล่างของนิสิต
 class StudentShell extends StatefulWidget {
   const StudentShell({super.key});
 
@@ -32,7 +32,6 @@ class _StudentShellState extends State<StudentShell> {
   @override
   void initState() {
     super.initState();
-    // รอให้หน้าจอสร้างเสร็จก่อน แล้วค่อยโหลดชั่วโมงกับแจ้งเตือนของนิสิตคนนี้
     Future.microtask(() {
       if (!mounted) return;
       final studentId = context.read<AuthProvider>().student!.studentId;

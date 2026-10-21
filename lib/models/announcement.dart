@@ -1,6 +1,5 @@
-// ประกาศจากผู้คุม แสดงในหน้ากิจกรรม
 class Announcement {
-  final int? id; // ฐานข้อมูลสร้างให้เอง
+  final int? id;
   final String activityId;
   final String text;
   final DateTime createdAt;

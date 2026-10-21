@@ -2,20 +2,17 @@ import '../models/activity.dart';
 import '../models/registration.dart';
 import '../utils/constants.dart';
 
-// ข้อมูลตัวอย่างที่ใส่ลงฐานข้อมูลตอนเปิดแอพครั้งแรก
-// ทุกเครื่องได้ id ชุดเดียวกัน QR จึงสแกนข้ามเครื่องได้
+// ข้อมูลตัวอย่าง
 
-// กิจกรรมนี้จะถูกเลื่อนเวลาให้ "กำลังจัดอยู่" ทุกครั้งที่เปิดแอพ ไว้สาธิตการสแกน
+// ใช้สาธิตการสแกน
 const String demoActivityId = 'a-blood';
 
-// หน่วยงานและรหัสสำหรับเข้าโหมดผู้คุม
 const Map<String, String> seedOrgs = {
   'NUVOL26': 'ชมรมอาสาพัฒนา มน.',
   'SCI2569': 'สโมสรนิสิตคณะวิทยาศาสตร์',
   'NUSA69': 'กองกิจการนิสิต',
 };
 
-// สร้างวันเวลา โดยนับจากวันนี้ไป day วัน
 DateTime _day(int day, int hour) {
   final now = DateTime.now();
   return DateTime(now.year, now.month, now.day + day, hour);
@@ -139,7 +136,7 @@ List<Activity> seedActivities() {
   ];
 }
 
-// นิสิตตัวอย่าง [รหัส, ชื่อ, คณะ]
+// [รหัส, ชื่อ, คณะ]
 const List<List<String>> _people = [
   ['67310011', 'กมลชนก ศรีสุข', 'วิทยาศาสตร์'],
   ['67310024', 'ณัฐวุฒิ แก้วมณี', 'วิศวกรรมศาสตร์'],
@@ -153,9 +150,7 @@ const List<List<String>> _people = [
   ['67310108', 'กิตติศักดิ์ อินทร์แก้ว', 'นิติศาสตร์'],
 ];
 
-// ให้นิสิตตัวอย่างลงทะเบียนไว้ก่อน รายชื่อฝั่งผู้คุมจะได้ไม่ว่าง
 List<Registration> seedRegistrations() {
-  // กิจกรรม : จำนวนคนที่ลงทะเบียนไว้แล้ว
   const plan = {demoActivityId: 10, 'a-river': 6, 'a-wai': 8, 'a-grad': 3, 'a-dorm': 5};
 
   final list = <Registration>[];

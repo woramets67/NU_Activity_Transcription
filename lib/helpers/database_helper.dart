@@ -9,10 +9,8 @@ import '../models/registration.dart';
 import '../models/student.dart';
 import 'seed_data.dart';
 
-// จัดการฐานข้อมูล SQLite ทั้งหมดของแอพ (แบบเดียวกับบทที่ 13 และ 15)
-// หน้าจอไม่เรียกไฟล์นี้ตรงๆ ให้เรียกผ่าน Provider
+// ฐานข้อมูล SQLite
 class DatabaseHelper {
-  // ใช้ตัวเดียวทั้งแอพ (singleton)
   static final DatabaseHelper instance = DatabaseHelper._init();
   DatabaseHelper._init();
 
@@ -34,7 +32,6 @@ class DatabaseHelper {
     );
   }
 
-  // สร้างตารางตอนเปิดแอพครั้งแรก
   Future<void> _createDB(Database db, int version) async {
     await db.execute('''
       CREATE TABLE students (
@@ -110,7 +107,6 @@ class DatabaseHelper {
       )
     ''');
 
-    // ใส่ข้อมูลตัวอย่าง
     for (final code in seedOrgs.keys) {
       await db.insert('orgs', {'code': code, 'name': seedOrgs[code]});
     }
@@ -122,7 +118,7 @@ class DatabaseHelper {
     }
   }
 
-  // เลื่อนกิจกรรมสาธิตให้กำลังจัดอยู่เสมอ
+  // กิจกรรมสาธิตให้กำลังจัดอยู่เสมอ
   Future<void> _moveDemoActivity(Database db) async {
     final now = DateTime.now();
     await db.update(
@@ -136,7 +132,7 @@ class DatabaseHelper {
     );
   }
 
-  // ---------- นิสิต ----------
+  // นิสิต
 
   Future<void> insertStudent(Student s) async {
     final db = await database;
@@ -150,9 +146,8 @@ class DatabaseHelper {
     return Student.fromMap(rows.first);
   }
 
-  // ---------- หน่วยงาน ----------
+  // หน่วยงาน
 
-  // คืนชื่อหน่วยงาน หรือ null ถ้าไม่มีรหัสนี้
   Future<String?> getOrgName(String code) async {
     final db = await database;
     final rows = await db.query('orgs', where: 'code = ?', whereArgs: [code]);
@@ -160,7 +155,7 @@ class DatabaseHelper {
     return rows.first['name'] as String;
   }
 
-  // ---------- กิจกรรม ----------
+  // กิจกรรม
 
   Future<List<Activity>> getActivities() async {
     final db = await database;
@@ -192,7 +187,7 @@ class DatabaseHelper {
     await db.update('activities', a.toMap(), where: 'id = ?', whereArgs: [a.id]);
   }
 
-  // ---------- การลงทะเบียน ----------
+  // การลงทะเบียน
 
   Future<List<Registration>> getRegistrationsOfActivity(String activityId) async {
     final db = await database;
@@ -222,7 +217,6 @@ class DatabaseHelper {
 
   Future<void> insertRegistration(Registration r) async {
     final db = await database;
-    // ถ้าลงทะเบียนซ้ำ ให้ข้ามไป
     await db.insert('registrations', r.toMap(), conflictAlgorithm: ConflictAlgorithm.ignore);
   }
 
@@ -232,7 +226,7 @@ class DatabaseHelper {
         where: 'activity_id = ? AND student_id = ?', whereArgs: [activityId, studentId]);
   }
 
-  // ---------- ชั่วโมง ----------
+  // ชั่วโมง
 
   Future<List<Credit>> getCreditsOfStudent(String studentId) async {
     final db = await database;
@@ -265,7 +259,7 @@ class DatabaseHelper {
         where: 'activity_id = ? AND student_id = ?', whereArgs: [activityId, studentId]);
   }
 
-  // ---------- ประกาศ ----------
+  // ประกาศ
 
   Future<List<Announcement>> getAnnouncements(String activityId) async {
     final db = await database;
@@ -279,7 +273,7 @@ class DatabaseHelper {
     await db.insert('announcements', a.toMap());
   }
 
-  // ---------- แจ้งเตือน ----------
+  // แจ้งเตือน
 
   Future<List<AppNotice>> getNotices(String studentId) async {
     final db = await database;

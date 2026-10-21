@@ -1,5 +1,4 @@
-// ฟังก์ชันตรวจข้อมูลในฟอร์ม ใช้กับ validator ของ TextFormField (บทที่ 8)
-// คืน null ถ้าผ่าน คืนข้อความถ้าไม่ผ่าน
+// ตรวจข้อมูลฟอร์ม
 
 String? validateRequired(String? value) {
   if (value == null || value.trim().isEmpty) {

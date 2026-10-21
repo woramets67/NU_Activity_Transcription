@@ -1,8 +1,8 @@
 class Student {
-  final String studentId; // รหัสนิสิต 8 หลัก
+  final String studentId;
   final String name;
   final String faculty;
-  final String pinHash; // ไม่เก็บ PIN ตรงๆ เก็บแบบเข้ารหัส
+  final String pinHash; // sha256
 
   Student({
     required this.studentId,

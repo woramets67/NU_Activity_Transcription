@@ -11,19 +11,18 @@ import '../screens/supervisor/qr_presenter_screen.dart';
 import '../screens/supervisor/sup_home_screen.dart';
 import '../screens/supervisor/sup_login_screen.dart';
 
-// ชื่อหน้าทั้งหมดของแอพ (named routes บทที่ 9)
+// ชื่อหน้า
 class Routes {
-  static const activityDetail = '/activity'; // ส่ง id ของกิจกรรม (String)
+  static const activityDetail = '/activity';
   static const scan = '/scan';
-  static const claimResult = '/claim-result'; // ส่ง ClaimResult
+  static const claimResult = '/claim-result';
   static const supLogin = '/sup-login';
   static const supHome = '/sup-home';
-  static const activityEditor = '/activity-editor'; // ส่ง id ถ้าแก้ไข ส่ง null ถ้าสร้างใหม่
-  static const manage = '/manage'; // ส่ง id ของกิจกรรม (String)
-  static const qrPresenter = '/qr'; // ส่ง Activity
+  static const activityEditor = '/activity-editor';
+  static const manage = '/manage';
+  static const qrPresenter = '/qr';
 }
 
-// onGenerateRoute: ดูชื่อหน้าแล้วส่งข้อมูล (arguments) เข้าหน้าจอให้ถูกต้อง
 Route<dynamic> generateRoute(RouteSettings settings) {
   final args = settings.arguments;
   Widget page;

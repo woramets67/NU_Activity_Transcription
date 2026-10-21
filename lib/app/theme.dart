@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-// สีของแอพ ใช้สี มน. (ส้มแสด) เป็นสีเน้น
+// สีและฟอนต์
 const Color kOrange = Color(0xFFEE7424);
 const Color kDark = Color(0xFF1C1C20);
 const Color kBackground = Color(0xFFF6F5F2);
@@ -14,7 +14,6 @@ ThemeData appTheme() {
     useMaterial3: true,
     colorScheme: ColorScheme.fromSeed(seedColor: kOrange, primary: kDark),
     scaffoldBackgroundColor: kBackground,
-    // ฟอนต์ไทย Anuphan จาก google_fonts (บทที่ 4)
     textTheme: GoogleFonts.anuphanTextTheme(),
     appBarTheme: const AppBarTheme(
       backgroundColor: kBackground,

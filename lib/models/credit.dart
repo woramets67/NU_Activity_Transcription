@@ -1,13 +1,12 @@
-// ชั่วโมงที่นิสิตได้จากกิจกรรม 1 กิจกรรม (ได้ครั้งเดียว)
 class Credit {
   final String activityId;
   final String activityTitle;
   final String studentId;
   final double hours;
-  final String kind; // 'จิตอาสา' หรือ 'กิจกรรมคณะ'
-  final String method; // 'สแกน QR' หรือ 'ผู้คุมยืนยันให้'
-  final double distance; // ระยะจากผู้คุม (เมตร) ถ้าผู้คุมยืนยันให้จะเป็น 0
-  final String ref; // เลขอ้างอิง
+  final String kind;
+  final String method;
+  final double distance; // เมตร
+  final String ref;
   final DateTime verifiedAt;
 
   Credit({

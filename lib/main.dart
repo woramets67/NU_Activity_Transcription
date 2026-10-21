@@ -13,7 +13,6 @@ import 'screens/student/welcome_screen.dart';
 
 void main() {
   runApp(
-    // ใช้ MultiProvider เพราะมี Provider หลายตัว (บทที่ 11)
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => AuthProvider()..loadSavedLogin()),
@@ -42,7 +41,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// หน้าแรกสุด: ยังไม่เข้าระบบไปหน้า Welcome เข้าแล้วไปหน้าหลักของนิสิต
+// เลือกหน้าเริ่มต้น
 class StartScreen extends StatelessWidget {
   const StartScreen({super.key});
 

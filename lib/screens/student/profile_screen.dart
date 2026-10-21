@@ -8,7 +8,7 @@ import '../../providers/credit_provider.dart';
 import '../../utils/constants.dart';
 import '../../utils/thai_date.dart';
 
-// หน้า Transcript ชั่วโมงสะสม แยกจิตอาสากับกิจกรรมคณะ (R3)
+// Transcript
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
@@ -23,7 +23,6 @@ class ProfileScreen extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
         children: [
-          // การ์ดสีเข้ม แสดงชื่อและชั่วโมงรวม
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
@@ -90,7 +89,6 @@ class ProfileScreen extends StatelessWidget {
 
           OutlinedButton.icon(
             onPressed: () {
-              // ถ้าเคยเข้าโหมดผู้คุมแล้วไปหน้าผู้คุมเลย ถ้ายังให้ใส่รหัสก่อน
               if (auth.isSupervisor) {
                 Navigator.pushNamed(context, Routes.supHome);
               } else {
@@ -110,7 +108,6 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  // ชั่วโมงของแต่ละประเภท เช่น "13 ชม. จิตอาสา 3 กิจกรรม"
   Widget _kindSummary(CreditProvider creditProvider, String kind) {
     return Expanded(
       child: Column(

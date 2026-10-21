@@ -6,7 +6,7 @@ import '../../app/theme.dart';
 import '../../providers/notice_provider.dart';
 import '../../utils/thai_date.dart';
 
-// กล่องแจ้งเตือน มีจุดส้มบอกว่ายังไม่อ่าน กดแล้วไปหน้ากิจกรรม (R5)
+// กล่องแจ้งเตือน
 class InboxScreen extends StatelessWidget {
   const InboxScreen({super.key});
 

@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import '../helpers/database_helper.dart';
 import '../models/app_notice.dart';
 
-// กล่องแจ้งเตือนของนิสิต และตัวเลขยังไม่อ่าน (R5)
+// แจ้งเตือน
 class NoticeProvider extends ChangeNotifier {
   final db = DatabaseHelper.instance;
 

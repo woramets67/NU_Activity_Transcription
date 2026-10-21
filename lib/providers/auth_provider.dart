@@ -7,26 +7,23 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../helpers/database_helper.dart';
 import '../models/student.dart';
 
-// เก็บว่าใครเข้าระบบอยู่ ทั้งนิสิตและผู้คุม
+// การเข้าระบบ
 class AuthProvider extends ChangeNotifier {
   final db = DatabaseHelper.instance;
 
   bool isLoading = true;
-  Student? student; // นิสิตที่เข้าระบบอยู่ (null = ยังไม่เข้า)
+  Student? student;
 
-  // ข้อมูลผู้คุม (supOrgCode เป็น null = ไม่ได้อยู่ในโหมดผู้คุม)
   String? supOrgCode;
   String supOrgName = '';
   String supName = '';
 
   bool get isSupervisor => supOrgCode != null;
 
-  // เข้ารหัส PIN ก่อนเก็บลงฐานข้อมูล
   String hashPin(String studentId, String pin) {
     return sha256.convert(utf8.encode('$studentId:$pin')).toString();
   }
 
-  // เรียกตอนเปิดแอพ ดูว่าเคยเข้าระบบค้างไว้หรือไม่ (เก็บใน SharedPreferences)
   Future<void> loadSavedLogin() async {
     final prefs = await SharedPreferences.getInstance();
 
@@ -46,7 +43,6 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // สมัคร คืนข้อความผิดพลาด หรือ null ถ้าสำเร็จ
   Future<String?> signUp(String studentId, String name, String faculty, String pin) async {
     final existing = await db.getStudent(studentId);
     if (existing != null) {
@@ -63,7 +59,6 @@ class AuthProvider extends ChangeNotifier {
     return null;
   }
 
-  // เข้าสู่ระบบ คืนข้อความผิดพลาด หรือ null ถ้าสำเร็จ
   Future<String?> signIn(String studentId, String pin) async {
     final found = await db.getStudent(studentId);
     if (found == null) {
@@ -90,7 +85,6 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // เข้าโหมดผู้คุมด้วยรหัสหน่วยงาน คืนข้อความผิดพลาด หรือ null ถ้าสำเร็จ
   Future<String?> enterSupervisor(String name, String orgCode) async {
     final code = orgCode.trim().toUpperCase();
     final orgName = await db.getOrgName(code);

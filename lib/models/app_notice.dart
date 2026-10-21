@@ -1,6 +1,5 @@
-// แจ้งเตือน 1 รายการในกล่องแจ้งเตือนของนิสิต
 class AppNotice {
-  final int? id; // ฐานข้อมูลสร้างให้เอง
+  final int? id;
   final String studentId;
   final String activityId;
   final String title;
@@ -26,7 +25,7 @@ class AppNotice {
       'title': title,
       'body': body,
       'created_at': createdAt.millisecondsSinceEpoch,
-      'is_read': isRead ? 1 : 0, // SQLite ไม่มี bool ใช้ 0 กับ 1 แทน
+      'is_read': isRead ? 1 : 0,
     };
   }
 
