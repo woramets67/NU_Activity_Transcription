@@ -10,7 +10,7 @@ import '../../providers/credit_provider.dart';
 import '../../utils/constants.dart';
 import '../../widgets/activity_card.dart';
 
-// หน้าแรก: รายการกิจกรรมที่เปิดรับ กรองตามประเภทได้ (R1)
+// Home
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -22,7 +22,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    // รอให้หน้าจอสร้างเสร็จก่อน แล้วค่อยโหลดกิจกรรม
     Future.microtask(() => _reload());
   }
 
@@ -40,12 +39,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       appBar: AppBar(title: Text('สวัสดี ${student.name}')),
-      // ดึงหน้าจอลงเพื่อโหลดใหม่
       body: RefreshIndicator(
         onRefresh: _reload,
         child: ListView.builder(
           padding: const EdgeInsets.fromLTRB(16, 0, 16, 120),
-          itemCount: list.length + 1, // +1 สำหรับแถวตัวกรองด้านบน
+          itemCount: list.length + 1,
           itemBuilder: (context, index) {
             if (index == 0) {
               return _filterRow(activityProvider);
@@ -68,23 +66,32 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _filterRow(ActivityProvider activityProvider) {
     final filters = ['ทั้งหมด', ...kActivityKinds];
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Wrap(
-        spacing: 8,
-        children: filters.map((f) {
-          return ChoiceChip(
-            label: Text(f),
-            selected: activityProvider.filter == f,
-            onSelected: (value) => activityProvider.setFilter(f),
-          );
-        }).toList(),
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextField(
+          decoration: const InputDecoration(prefixIcon: Icon(Icons.search), hintText: 'ค้นหากิจกรรม'),
+          onChanged: (text) => activityProvider.setSearchText(text),
+        ),
+        const SizedBox(height: 8),
+        Wrap(
+          spacing: 8,
+          children: filters.map((f) {
+            return ChoiceChip(
+              label: Text(f),
+              selected: activityProvider.filter == f,
+              onSelected: (value) => activityProvider.setFilter(f),
+            );
+          }).toList(),
+        ),
+        const SizedBox(height: 12),
+        if (activityProvider.openActivities.isEmpty)
+          const Text('ไม่พบกิจกรรม', style: TextStyle(color: kGrey)),
+      ],
     );
   }
 }
 
-// ข้อความสถานะบนการ์ด ใช้ร่วมกับหน้ากิจกรรมของฉัน
 String statusText(ActivityProvider p, CreditProvider c, Activity a) {
   if (c.hasCredit(a.id)) return 'ได้รับชั่วโมงแล้ว';
   if (p.isRegistered(a.id) && a.isOngoing()) return 'กำลังดำเนินอยู่ สแกนรับชั่วโมงได้';

@@ -10,7 +10,7 @@ import '../../providers/auth_provider.dart';
 import '../../providers/credit_provider.dart';
 import '../../utils/thai_date.dart';
 
-// หน้ารายละเอียดกิจกรรม ลงทะเบียน ยกเลิก และดูประกาศจากผู้คุม
+// Activity detail
 class ActivityDetailScreen extends StatelessWidget {
   final String activityId;
   const ActivityDetailScreen({super.key, required this.activityId});
@@ -73,7 +73,6 @@ class ActivityDetailScreen extends StatelessWidget {
     );
   }
 
-  // ปุ่มเปลี่ยนไปตามสถานะ
   Widget _actionButton(BuildContext context, Activity activity) {
     final activityProvider = context.watch<ActivityProvider>();
     final creditProvider = context.watch<CreditProvider>();
@@ -151,7 +150,6 @@ class ActivityDetailScreen extends StatelessWidget {
     messenger.showSnackBar(SnackBar(content: Text(error ?? 'ยกเลิกแล้ว')));
   }
 
-  // โหลดประกาศจากฐานข้อมูลด้วย FutureBuilder (บทที่ 12)
   Widget _announcementList(ActivityProvider activityProvider, Activity activity) {
     return FutureBuilder<List<Announcement>>(
       future: activityProvider.getAnnouncements(activity.id),

@@ -4,10 +4,10 @@ import '../app/theme.dart';
 import '../models/activity.dart';
 import '../utils/thai_date.dart';
 
-// การ์ดกิจกรรม โปสเตอร์อยู่ด้านบน ข้อมูลอยู่ด้านล่าง (Column + Stack บทที่ 5 และ 6)
+// Activity card
 class ActivityCard extends StatelessWidget {
   final Activity activity;
-  final String statusText; // เช่น "เหลือ 5 ที่" หรือ "ลงทะเบียนแล้ว"
+  final String statusText;
   final Color statusColor;
   final VoidCallback onTap;
 
@@ -28,7 +28,6 @@ class ActivityCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // โปสเตอร์ และป้ายประเภทกับชั่วโมงวางทับด้านบน
             Stack(
               children: [
                 Image.asset(activity.poster, height: 180, width: double.infinity, fit: BoxFit.cover),

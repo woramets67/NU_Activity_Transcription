@@ -9,7 +9,7 @@ import '../../providers/credit_provider.dart';
 import '../../utils/thai_date.dart';
 import 'home_screen.dart';
 
-// กิจกรรมที่ลงทะเบียนไว้ แบ่งเป็นกำลังจะถึง กับ ที่ผ่านมา
+// My activities
 class MineScreen extends StatelessWidget {
   const MineScreen({super.key});
 
